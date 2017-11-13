@@ -3,6 +3,7 @@
 const express = require('express');
 const router = express.Router();
 const userRoutes = require('./user');
+const searchRoutes = require('./search')
 const wikiRoutes = require('./wiki');
 var models = require('../models');
 var Page = models.Page;
@@ -10,8 +11,8 @@ var User = models.User;
 
 
 router.use('/wiki', wikiRoutes);
-router.use('/user', userRoutes);
-
+router.use('/users', userRoutes);
+router.use('/search', searchRoutes);
 router.get('/', function (req, res){
   Page.findAll()
   .then(function(result){

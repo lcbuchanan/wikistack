@@ -24,6 +24,8 @@ router.post('/', function(req, res, next) {
     var page = Page.build({
       title: req.body.title,
       content: req.body.content,
+      status: req.body.status,
+      tags: req.body.tags.split(' ')
     });
 
     return page.save()
@@ -46,19 +48,27 @@ router.get('/add', function (req, res){
 });
 
 
-router.get('/:urlTitle', function (req, res){
-  Page.findAll({
+router.get('/:urlTitle', function (req, res, next){
+  Page.findOne({
     where: {
-      urlTitle : req.params.urlTitle
-    }
-  })
-  .then(function (result){
-    console.log(result);
-    res.render('wikipage', {page: result[0].dataValues});
-  });
+        urlTitle: req.params.urlTitle
+    },
+    include: [
+        {model: User, as: 'author'}
+    ]
 })
-
-
-
+.then(function (page) {
+    // page instance will have a .author property
+    // as a filled in user object ({ name, email })
+    if (page === null) {
+        res.status(404).send();
+    } else {
+        res.render('wikipage', {
+            page: page
+        });
+    }
+})
+.catch(next);
+})
 
 module.exports = router;

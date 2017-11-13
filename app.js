@@ -14,7 +14,7 @@ const models = require('./models');
 //syncing database and starting app
 
 
-models.db.sync({ force: true })
+models.db.sync()
 .then(function (){
   app.listen(1337, () => {console.log('listening on port 1337')});
 })

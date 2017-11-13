@@ -22,6 +22,9 @@ const Page = db.define('pages', {
     date: {
       type: Sequelize.DATE,
       defaultValue: Sequelize.NOW
+    },
+    tags: {
+      type: Sequelize.ARRAY(Sequelize.STRING)
     }
   },
   {
