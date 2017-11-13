@@ -4,14 +4,20 @@ const express = require('express');
 const router = express.Router();
 const userRoutes = require('./user');
 const wikiRoutes = require('./wiki');
+var models = require('../models');
+var Page = models.Page;
+var User = models.User;
 
 
 router.use('/wiki', wikiRoutes);
 router.use('/user', userRoutes);
 
 router.get('/', function (req, res){
-  res.render('index');
-})
+  Page.findAll()
+  .then(function(result){
+    res.render('index', {pages: result});
+  });
+});
 
 
 module.exports = router;

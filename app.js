@@ -12,10 +12,9 @@ const models = require('./models');
 
 
 //syncing database and starting app
-models.Page.sync()
-.then(function (){
-  return models.User.sync();
-})
+
+
+models.db.sync({ force: true })
 .then(function (){
   app.listen(1337, () => {console.log('listening on port 1337')});
 })
@@ -32,7 +31,7 @@ app.use(express.static('public'));
 
 // body parsing middleware
 app.use(bodyParser.urlencoded({ extended: true })); // for HTML form submits
-app.use(bodyParser.json()); // would be for AJAX requests
+app.use(bodyParser.json()); // would be for AJAX
 
 
 app.use('/', routes);

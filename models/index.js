@@ -2,7 +2,7 @@
 const Sequelize = require('sequelize');
 const db = new Sequelize('postgres://localhost:5432/wikistack');
 
-const Page = db.define('page', {
+const Page = db.define('pages', {
     title: {
         type: Sequelize.STRING,
         allowNull: false
@@ -26,13 +26,13 @@ const Page = db.define('page', {
   },
   {
   getterMethods:{
-    route: function(){
+    route(){
       return `/wiki/${this.urlTitle}`;
     }
   }
 });
 
-const User = db.define('user', {
+const User = db.define('users', {
     name: {
         type: Sequelize.STRING,
         allowNull: false
@@ -46,7 +46,25 @@ const User = db.define('user', {
     }
 });
 
+//helper function to make urlTitle
+function titleToUrl (string){
+  if (string){
+    return string.replace(/\s+/g, '_').replace(/\W/g, '');
+  }
+  else {
+    return Math.random().toString(36).substring(2, 7);
+  }
+}
+
+Page.hook('beforeValidate', (page, options) => {
+  page.urlTitle = titleToUrl(page.title);
+});
+
+Page.belongsTo(User, { as: 'author' });
+
+
 module.exports = {
-  Page: Page,
-  User: User
+  db,
+  Page,
+  User
 };
